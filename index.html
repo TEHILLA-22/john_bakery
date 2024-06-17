@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart - Jevemy Styles Lives</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.product, .cart-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.add-to-cart {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.add-to-cart:hover {
+    text-decoration: underline;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Your Cart</h1>
+    <div id="cart"></div>
+    <button onclick="clearCart()">Clear Cart</button>
+
+    <script>
+        // Function to get query parameters
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                product: params.get('product')
+            };
+        }
+
+        // Function to update the cart
+        function updateCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartDiv = document.getElementById('cart');
+            cartDiv.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartDiv.innerHTML = '<p>Your cart is empty.</p>';
+                return;
+            }
+
+            cart.forEach(item => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'cart-item';
+                productDiv.innerHTML = `<p>Product ${item}</p>`;
+                cartDiv.appendChild(productDiv);
+            });
+        }
+
+        // Function to add product to cart
+        function addToCart(product) {
+            if (!product) return;
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push(product);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        // Function to clear the cart
+        function clearCart() {
+            localStorage.removeItem('cart');
+            updateCart();
+        }
+
+        // On page load, add product if present in URL and update cart
+        window.onload = () => {
+            const params = getQueryParams();
+            if (params.product) {
+                addToCart(params.product);
+            }
+            updateCart();
+        };
+    </script>
+</body>
+</html>
